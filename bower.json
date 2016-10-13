@@ -1,0 +1,20 @@
+{
+  "name": "spotlight",
+  "homepage": "https://github.com/VariableVasasMT/bower-angular-spotlight",
+  "authors": [
+    "VariableVasasMT <kritivasas.shukla@mindtickle.com>"
+  ],
+  "description": "spotlight type search for your app",
+  "main": "spotlightOverlay.js",
+  "keywords": [
+    "spotlight"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
