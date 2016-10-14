@@ -74,8 +74,8 @@ angular.module('de.stekoe.angular.spotlight', [])
         var $ngSpotlightOverlay;
 
         var controller = ['$scope', function ($scope) {
-            $scope.searchInputInfo = 'Keine Ergebnisse';
-
+            $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
+            $scope.spotlightPlaceholder = AngularSpotlight.getSpotlightPlaceholder();
             $scope.search = function () {
                 if ($scope.searchTerm.length > 0) {
                     AngularSpotlight.search($scope.searchTerm)
@@ -182,17 +182,14 @@ angular.module('de.stekoe.angular.spotlight', [])
             }
 
             function setSearchInputInfo(categoryName) {
-                $scope.searchInputInfo = undefined;
-                if ($scope.searchTerm.length === 0) {
-                    $scope.searchInputInfo = undefined;
-                } else {
-                    if ($scope.selectedItem) {
-                        $scope.searchInputInfo = $scope.selectedItem.name + " - " + categoryName;
-                    } else if ($scope.searchResultCount() === 0) {
-                        $scope.searchInputInfo = "Keine Ergebnisse";
-                    }
-                }
-            }
+              if ($scope.searchTerm.length === 0) {
+                $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoSearching();
+              } else if ($scope.searchResultsCount === 0) {
+                $scope.searchInputInfo = AngularSpotlight.getSearchInputInfoNoResults();
+              } else if ($scope.selectedItem) {
+                $scope.searchInputInfo = $scope.selectedItem.name + " - " + categoryName;
+              }
+            } 
 
             function getSelectedItemIndex() {
                 return $scope.selectedItemIndex || 0;
@@ -228,50 +225,54 @@ angular.module('de.stekoe.angular.spotlight', [])
             }
         }];
 
-        function linkFn(scope, element) {
-            var spotlightOverlay = $(element).children();
+        function link(scope, element) {
             $ngSpotlightOverlay = $(element);
 
-            $('[data-toggle="ng-spotlight"]').on('click', function(e) {
-                e.stopPropagation();
-                toggleOverlay();
-            });
-
-            $(document).click(function (e) {
-                if ($(e.target).closest('.ng-spotlight').length === 0) {
-                    spotlightOverlay.hide();
-                } else {
-                    spotlightOverlay
-                        .find('input')
-                        .focus();
-                }
-            });
-
-            $(document).keydown(function (e) {
-                if (e.ctrlKey && e.keyCode === KEY.SPACE) {
-                    e.preventDefault();
+            $('[data-toggle="ng-spotlight"]')
+                .on('click', function (e) {
+                    e.stopPropagation();
                     toggleOverlay();
-                }
-            });
+                });
+
+            $(document)
+                .on('keydown', function (e) {
+                    if (e.ctrlKey && e.keyCode === AngularSpotlight.getSpotlightToggleCtrlKey()) {
+                        e.preventDefault();
+                        toggleOverlay();
+                    }
+                })
+                .on('click', function (e) {
+                    if ($(e.target).closest('.ng-spotlight').length === 0) {
+                        $ngSpotlightOverlay.hide();
+                    } else {
+                        $ngSpotlightOverlay
+                            .find('input')
+                            .focus();
+                    }
+                });
 
             function toggleOverlay() {
-                spotlightOverlay.toggle();
-                if (spotlightOverlay.is(':visible')) {
-                    spotlightOverlay.find('input')
+                $ngSpotlightOverlay.toggle();
+
+                if ($ngSpotlightOverlay.is(':visible')) {
+                    $ngSpotlightOverlay
+                        .find('input')
                         .focus()
                         .select();
                 }
             }
 
-            $ngSpotlightOverlay.find('.ng-spotlight-input').autoGrowInput({
-                maxWidth: 400,
-                minWidth: 10,
-                comfortZone: 15
-            });
-        }
+            $ngSpotlightOverlay
+                .find('.ng-spotlight-input').autoGrowInput({
+                    maxWidth: 400,
+                    minWidth: 10,
+                    comfortZone: 15
+                });
+        } 
 
         return {
             restrict: 'E',
+            replace: true,
             controller: controller,
             link: linkFn,
             templateUrl: 'spotlightOverlayTemplate.html'
