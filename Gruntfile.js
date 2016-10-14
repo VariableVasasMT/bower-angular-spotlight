@@ -5,7 +5,7 @@ module.exports = function(grunt) {
 	      separator: ';',
 	    },
 	    dist: {
-	      src: ['provider/spotlight.js', 'directive/*.js', 'spotlightOverlay.js'],
+	      src: ['spotlightOverlay.js', 'provider/spotlight.js', 'directive/*.js'],
 	      dest: 'dist/built.js',
 	    },
 	  },
