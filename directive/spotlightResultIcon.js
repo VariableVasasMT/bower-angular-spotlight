@@ -20,7 +20,7 @@ angular.module('de.stekoe.angular.spotlight')
                         } else {
                             element.html("");
                         }
-                    })
+                    });
                 }
 
                 function updateResultIcon(iconDescriptor) {
@@ -30,5 +30,5 @@ angular.module('de.stekoe.angular.spotlight')
                     scope.iconDescriptor = iconDescriptor;
                 }
             }
-        }
+        };
     }]);

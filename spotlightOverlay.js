@@ -1,7 +1,7 @@
 angular.module('de.stekoe.angular.spotlight', [])
     .directive('spotlightOverlay', ['$timeout', '$http', '$compile', 'AngularSpotlight', function ($timeout, $http, $compile, AngularSpotlight) {
 
-        const KEY = {
+        var KEY = {
             UP: 38,
             DOWN: 40,
             SPACE: 32,
@@ -89,7 +89,7 @@ angular.module('de.stekoe.angular.spotlight', [])
             function selectPreviousEntry() {
                 var idx = getSelectedItemIndex();
                 if (idx - 1 >= 0) {
-                    selectItemAtIndex(idx - 1)
+                    selectItemAtIndex(idx - 1);
                 }
             }
 

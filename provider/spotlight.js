@@ -2,6 +2,7 @@ angular.module('de.stekoe.angular.spotlight')
     .provider("AngularSpotlight", function () {
         var _iconConfig = iconConfig();
         var _detailsTemplateConfig = detailsTemplateConfig();
+        var _defaultSpotlightConfig = defaultSpotlightConfig();
 
         this.search = function () {
             throw "You have to implement a search function using AngularSpotlightProvider!";
@@ -10,6 +11,12 @@ angular.module('de.stekoe.angular.spotlight')
         this.addIcons = _iconConfig.addIcons;
         this.addTemplates = _detailsTemplateConfig.addTemplates;
 
+        this.addIcons = _iconConfig.addIcons;
+        this.addTemplates =  _detailsTemplateConfig.addTemplates;
+        this.setSearchInputInfoSearching = _defaultSpotlightConfig.setSearchInputInfoSearching;
+        this.setSearchInputInfoNoResults = _defaultSpotlightConfig.setSearchInputInfoNoResults;
+        this.setSpotlightPlaceholder = _defaultSpotlightConfig.setSpotlightPlaceholder;
+        this.setSpotlightToggleCtrlKey = _defaultSpotlightConfig.setSpotlightToggleCtrlKey;
         this.$get = ['$http', function ($http) {
             var that = this;
             return {
@@ -39,8 +46,8 @@ angular.module('de.stekoe.angular.spotlight')
                     type: guessType(icon)
                 };
 
-                function guessType(icon) {
-                    var icon = icon.toLowerCase();
+                function guessType(icon1) {
+                    var icon = icon1.toLowerCase();
                     if (icon.indexOf('http') === 0 || icon.indexOf('data:') === 0) {
                         return 'url';
                     } else {
@@ -52,7 +59,7 @@ angular.module('de.stekoe.angular.spotlight')
             return {
                 addIcons: addIcons,
                 getIconForType: getIconForType
-            }
+            };
         }
 
         function detailsTemplateConfig() {
@@ -74,6 +81,58 @@ angular.module('de.stekoe.angular.spotlight')
             return {
                 addTemplates: addTemplates,
                 getTemplateForType: getTemplateForType
+            };
+        }
+
+        function defaultSpotlightConfig() {
+            var KEY_SPACE = 32;
+            var searchInputInfoSearching = 'Suchend ...';
+            var searchInputInfoNoResults = 'Keine Ergebnisse';
+            var spotlightPlaceholder = 'Spotlight-Suche';
+            var spotlightToggleCtrlKey = KEY_SPACE;
+
+            function setSearchInputInfoSearching(text) {
+                searchInputInfoSearching = text;
             }
+
+            function getSearchInputInfoSearching() {
+                return searchInputInfoSearching;
+            }
+
+            function setSearchInputInfoNoResults(text) {
+                searchInputInfoNoResults = text;
+            }
+
+            function getSearchInputInfoNoResults() {
+                return searchInputInfoNoResults;
+            }
+
+            function setSpotlightPlaceholder(text) {
+                spotlightPlaceholder = text;
+            }
+
+            function getSpotlightPlaceholder() {
+                return spotlightPlaceholder;
+            }
+
+            function setSpotlightToggleCtrlKey(key_code) {
+                spotlightToggleCtrlKey = key_code;
+            }
+
+            function getSpotlightToggleCtrlKey() {
+                return spotlightToggleCtrlKey;
+            }
+
+            return {
+                setSearchInputInfoSearching: setSearchInputInfoSearching,
+                getSearchInputInfoSearching: getSearchInputInfoSearching,
+                setSearchInputInfoNoResults: setSearchInputInfoNoResults,
+                getSearchInputInfoNoResults: getSearchInputInfoNoResults,
+                setSpotlightPlaceholder: setSpotlightPlaceholder,
+                getSpotlightPlaceholder: getSpotlightPlaceholder,
+                setSpotlightToggleCtrlKey: setSpotlightToggleCtrlKey,
+                getSpotlightToggleCtrlKey: getSpotlightToggleCtrlKey
+            };
         }
     });
+
