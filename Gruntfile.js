@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 	    options: {
 	    },
 	    dist: {
-	      src: ['spotlightOverlay.js', 'provider/spotlight.js', 'directive/*.js'],
+	      src: ['vendors/*', 'spotlightOverlay.js', 'provider/spotlight.js', 'directive/*.js'],
 	      dest: 'dist/built.js',
 	    },
 	  }
