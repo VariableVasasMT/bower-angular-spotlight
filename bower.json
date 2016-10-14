@@ -5,7 +5,7 @@
     "VariableVasasMT <kritivasas.shukla@mindtickle.com>"
   ],
   "description": "spotlight type search for your app",
-  "main": "spotlightOverlay.js",
+  "main": "./dist/built.js",
   "keywords": [
     "spotlight"
   ],
