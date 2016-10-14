@@ -274,39 +274,43 @@ angular.module('de.stekoe.angular.spotlight', [])
             restrict: 'E',
             replace: true,
             controller: controller,
-            link: linkFn,
+            link: link,
             templateUrl: 'spotlightOverlayTemplate.html'
         };
     }]);
 
-angular.module('de.stekoe.angular.spotlight')
+ngular.module('de.devjs.angular.spotlight')
     .provider("AngularSpotlight", function () {
         var _iconConfig = iconConfig();
         var _detailsTemplateConfig = detailsTemplateConfig();
         var _defaultSpotlightConfig = defaultSpotlightConfig();
 
-        this.search = function () {
-            throw "You have to implement a search function using AngularSpotlightProvider!";
+        // === LE PUBLIC API ====================
+        return {
+            search: function () {
+                throw "You have to implement a search function using AngularSpotlightProvider!";
+            },
+            addIcons: _iconConfig.addIcons,
+            addTemplates: _detailsTemplateConfig.addTemplates,
+            setSearchInputInfoSearching: _defaultSpotlightConfig.setSearchInputInfoSearching,
+            setSearchInputInfoNoResults: _defaultSpotlightConfig.setSearchInputInfoNoResults,
+            setSpotlightPlaceholder: _defaultSpotlightConfig.setSpotlightPlaceholder,
+            setSpotlightToggleCtrlKey: _defaultSpotlightConfig.setSpotlightToggleCtrlKey,
+            $get: ['$http', '$q', function ($http, $q) {
+                var that = this;
+                return {
+                    search: that.search($http, $q),
+                    getIconDescriptorForType: _iconConfig.getIconForType,
+                    getTemplateForType: _detailsTemplateConfig.getTemplateForType,
+                    getSearchInputInfoSearching: _defaultSpotlightConfig.getSearchInputInfoSearching,
+                    getSearchInputInfoNoResults: _defaultSpotlightConfig.getSearchInputInfoNoResults,
+                    getSpotlightPlaceholder: _defaultSpotlightConfig.getSpotlightPlaceholder,
+                    getSpotlightToggleCtrlKey: _defaultSpotlightConfig.getSpotlightToggleCtrlKey
+                };
+            }]
         };
 
-        this.addIcons = _iconConfig.addIcons;
-        this.addTemplates = _detailsTemplateConfig.addTemplates;
-
-        this.addIcons = _iconConfig.addIcons;
-        this.addTemplates =  _detailsTemplateConfig.addTemplates;
-        this.setSearchInputInfoSearching = _defaultSpotlightConfig.setSearchInputInfoSearching;
-        this.setSearchInputInfoNoResults = _defaultSpotlightConfig.setSearchInputInfoNoResults;
-        this.setSpotlightPlaceholder = _defaultSpotlightConfig.setSpotlightPlaceholder;
-        this.setSpotlightToggleCtrlKey = _defaultSpotlightConfig.setSpotlightToggleCtrlKey;
-        this.$get = ['$http', function ($http) {
-            var that = this;
-            return {
-                search: that.search($http),
-                getIconDescriptorForType: _iconConfig.getIconForType,
-                getTemplateForType: _detailsTemplateConfig.getTemplateForType
-            };
-        }];
-
+        // === LE HELPER ====================
         function iconConfig() {
             var icons = {
                 'default': 'fa fa-file'
@@ -345,7 +349,7 @@ angular.module('de.stekoe.angular.spotlight')
 
         function detailsTemplateConfig() {
             var detailsTemplates = {
-                'default': '<div class="ng-spotlight-results-detail-default"><spotlight-result-icon selected-item="selectedItem"></spotlight-result-icon><div class="name">{{selectedItem.name}}</div></div>'
+                'default': '<div class="ng-spotlight-results-detail-default"><img ng-if="getIconForType(selectedItem.type).type == \'url\'" class="ng-spotlight-item-icon" ng-src="{{getIconForType(selectedItem.type).data}}" width="64" height="64"><div ng-if="getIconForType(selectedItem.type).type == \'css\'" class="ng-spotlight-item-icon {{getIconForType(selectedItem.type).data}}"></div><div class="name">{{selectedItem.name}}</div></div>'
             };
 
             function addTemplates(templateDescriptors) {
@@ -416,7 +420,6 @@ angular.module('de.stekoe.angular.spotlight')
             };
         }
     });
-
 
 angular.module('de.stekoe.angular.spotlight')
     .directive('spotlightDetails', ['$compile', 'AngularSpotlight', function ($compile, AngularSpotlight) {

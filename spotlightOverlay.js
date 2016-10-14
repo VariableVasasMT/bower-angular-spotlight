@@ -212,7 +212,7 @@ angular.module('de.stekoe.angular.spotlight', [])
             restrict: 'E',
             replace: true,
             controller: controller,
-            link: linkFn,
+            link: link,
             templateUrl: 'spotlightOverlayTemplate.html'
         };
     }]);
